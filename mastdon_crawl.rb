@@ -3,7 +3,14 @@ require_relative './common.rb'
 DEFAULT_APP_NAME = "mastodon-cli-sample"
 DEFAULT_MASTODON_URL = 'https://mstdn.jp'
 FULL_ACCESS_SCOPES = "read write follow"
-max_id = 0
+
+# 最小値を探す
+con = ActiveRecord::Base.connection
+id = con.select_value("SELECT MIN(toot_id) FROM toots;")
+# id = con.execute("SELECT * FROM toots;")
+
+
+max_id = id || 0
 
 Dotenv.load
 
@@ -44,12 +51,6 @@ end
 client = Mastodon::REST::Client.new(base_url: ENV["MASTODON_URL"],
                                     bearer_token: ENV["MASTODON_ACCESS_TOKEN"])
 
-## 投稿する
-# message = ARGV[0] || ask("Your Message: ")
-# response = client.create_status(message)
-# p client.public_timeline()
-
-
 
 def get_timeline(*max_id,client)
   responses = client.public_timeline({:max_id => max_id}) unless max_id == 0 
@@ -69,8 +70,6 @@ def get_timeline(*max_id,client)
   end
   db_array
 end
-
-## とりあえず結果を出力してみる
 
 # ひたすら連打
 while TRUE
