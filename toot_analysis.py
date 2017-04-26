@@ -32,27 +32,27 @@ cmd = "touch toot.wakati"
 os.system( cmd )
 
 
-for  politic in tokyo_politic_array:
-    sql = "SELECT * FROM toots"
-    stmt.execute(sql)
-    rows = stmt.fetchall()
-    for row in rows:
-        tokens = t.tokenize(row["text"])
-        with open(tokyo_politic_file,'a',encoding='utf-8') as fp:
-            for tok in tokens:
-                if tok.base_form == "*":
-                    w = tok.surface
-                else:
-                    w = tok.base_form
-                ps = tok.part_of_speech #瀕死情報
-                hinsi = ps.split(',')[0]
-                if hinsi in ['名詞','形容詞']:
-                    r.append(w)
-            rl = (" ".join(r)).strip()
-            fp.write(rl)
-            fp.write("\n")
-            r = []
-            rl = ""
+sql = "SELECT * FROM toots"
+stmt.execute(sql)
+rows = stmt.fetchall()
+for row in rows:
+    tokens = t.tokenize(row["text"])
+    with open(toot_politic_file,'a',encoding='utf-8') as fp:
+        for tok in tokens:
+            if tok.base_form == "*":
+                w = tok.surface
+            else:
+                w = tok.base_form
+            ps = tok.part_of_speech #瀕死情報
+            hinsi = ps.split(',')[0]
+            if hinsi in ['名詞','形容詞']:
+                print(w)
+                r.append(w)
+        rl = (" ".join(r)).strip()
+        fp.write(rl)
+        fp.write("\n")
+        r = []
+        rl = ""
 
 
 
