@@ -59,8 +59,6 @@ def get_timeline(*max_id,client)
     # p response
     response_hash = response.to_h
     db_hash = {}
-    p response_hash
-    exit
     db_hash[:text] = response_hash["content"]
     db_hash[:toot_id] = response_hash["id"]
     db_hash[:toot_date] = response_hash["created_at"]    
