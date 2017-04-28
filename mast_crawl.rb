@@ -39,6 +39,7 @@ while TRUE
     hash = {}
     hash[:boost] = parse.css(".entry-reblog") if parse.at(".entry-reblog")
     hash[:name] = parse.css(".display-name").to_html
+    hash[:toot_link] = parse.css(".status__relative-time")[0].attributes["href"].value if parse.at(".status__relative-time")
     hash[:toot_date] = parse.css(".status__relative-time")[0].attributes["title"].value #トゥート日時
     hash[:data_date] =  parse.css("time")[0].attributes["datetime"].value #データとして保存用
     hash[:text] = parse.css("div.e-content").to_html #テキスト本文 面倒なんでタグごとぶっこむ
