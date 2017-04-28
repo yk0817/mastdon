@@ -30,3 +30,6 @@ ActiveRecord::Base.default_timezone = :local # config.active_record.default_time
 
 class Toot < ActiveRecord::Base
 end
+
+class Crawl < ActiveRecord::Base
+end

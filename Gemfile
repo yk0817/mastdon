@@ -9,3 +9,4 @@ gem "oauth2"
 gem "dotenv"
 gem 'activerecord'
 gem 'mysql2'
+gem 'nokogiri'
