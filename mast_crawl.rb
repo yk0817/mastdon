@@ -15,27 +15,37 @@ class MatCrawl
     doc
   end
   
-  
-  def next?
-    #code
+  def next_page?(nokogiri_parse)
+    # 次のページ
+    if nokogiri_parse.at(".next")
+      next_url = nokogiri_parse.css(".next")[0]["href"]
+    else
+      next_url = false
+    end
+    return next_url
   end
+  
 end
 
 crawl = MatCrawl.new
 
+url = "https://mstdn.jp/@mazzo"
+
 while TRUE
-  url = "https://mstdn.jp/@mazzo"
   nokogiri_parse = crawl.crawl(url)
   array = []
-  # next_url_param = 
+      
   nokogiri_parse.css(".entry").each do |parse|
     hash = {}
     hash[:boost] = parse.css(".entry-reblog") if parse.at(".entry-reblog")
     hash[:name] = parse.css(".display-name").to_html
     hash[:toot_date] = parse.css(".status__relative-time")[0].attributes["title"].value #トゥート日時
+    hash[:data_date] =  parse.css("time")[0].attributes["datetime"].value #データとして保存用
     hash[:text] = parse.css("div.e-content").to_html #テキスト本文 面倒なんでタグごとぶっこむ
-    print(hash)
     array << hash
   end
   sleep(1)
+  next_url = crawl.next_page?(nokogiri_parse)
+  break unless next_url
+  url = next_url
 end
