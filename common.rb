@@ -8,6 +8,8 @@ require 'oauth2'
 require 'dotenv'
 require 'pp'
 require 'active_record'
+require 'open-uri'
+require 'nokogiri'
 
 ActiveRecord::Base.logger = Logger.new(STDOUT)
 
