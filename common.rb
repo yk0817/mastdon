@@ -35,3 +35,6 @@ end
 
 class Crawl < ActiveRecord::Base
 end
+
+class CrawlState < ActiveRecord::Base
+end

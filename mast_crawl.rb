@@ -1,6 +1,5 @@
 require_relative './common.rb'
 
-
 class MatCrawl
   def crawl(url)
     charset = nil
