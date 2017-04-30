@@ -32,17 +32,21 @@ url = "https://mstdn.jp/@mazzo"
 
 while TRUE
   nokogiri_parse = crawl.crawl(url)
-  array = []
+  # array = []
       
   nokogiri_parse.css(".entry").each do |parse|
     hash = {}
-    hash[:boost] = parse.css(".entry-reblog") if parse.at(".entry-reblog")
-    hash[:name] = parse.css(".display-name").to_html
-    hash[:toot_link] = parse.css(".status__relative-time")[0].attributes["href"].value if parse.at(".status__relative-time")
-    hash[:toot_date] = parse.css(".status__relative-time")[0].attributes["title"].value #トゥート日時
-    hash[:data_date] =  parse.css("time")[0].attributes["datetime"].value #データとして保存用
-    hash[:text] = parse.css("div.e-content").to_html #テキスト本文 面倒なんでタグごとぶっこむ
-    array << hash
+    hash[:toot_id] = parse.css(".status__meta > .u-uid")[0].attributes["href"].value.match(/.+\/(\d+)$/).captures[0]
+    hash[:toot_username] = parse.css(".display-name > span").text
+    hash[:toot_display_name] = parse.css(".display-name > strong").text
+    hash[:toot_reblogged] = 1 if parse.at(".fa-retweet") #ブーストは1　ブーストじゃない→0
+    hash[:toot_display_name] = parse.css(".display-name").to_html
+    hash[:toot_link_text] = parse.css(".status__attachments__inner").to_html if parse.at(".status__attachments__inner")
+    hash[:toot_date] =  Time.parse(parse.css("time")[0].attributes["datetime"].value) #データとして保存用
+    hash[:toot_text] = parse.css("div.e-content").to_html #テキスト本文 面倒なんでタグごとぶっこむ
+    # p hash
+    # array << hash
+    Toot.create(hash)
   end
   sleep(1)
   next_url = crawl.next_page?(nokogiri_parse)
